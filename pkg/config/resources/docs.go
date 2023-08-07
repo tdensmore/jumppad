@@ -14,6 +14,9 @@ type Docs struct {
 
 	Image *Image `hcl:"image,block" json:"image,omitempty"` // image to use for the container
 
+	Logo   Logo   `hcl:"logo,block" json:"logo,omitempty"`
+	Assets string `hcl:"assets,optional" json:"assets,omitempty"`
+
 	Content []string `hcl:"content" json:"content"`
 
 	Port          int  `hcl:"port,optional" json:"port"`
@@ -24,6 +27,12 @@ type Docs struct {
 	// FQRN is the fully qualified resource name for the container, this can be used
 	// to access the container from other sources
 	FQRN string `hcl:"fqdn,optional" json:"fqdn,omitempty"`
+}
+
+type Logo struct {
+	URL    string `hcl:"url" json:"url"`
+	Width  int    `hcl:"width" json:"width"`
+	Height int    `hcl:"height" json:"height"`
 }
 
 func (d *Docs) Process() error {

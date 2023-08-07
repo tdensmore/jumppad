@@ -16,7 +16,8 @@ const docsImageName = "ghcr.io/jumppad-labs/docs"
 const docsVersion = "v0.1.0"
 
 type DocsConfig struct {
-	DefaultPath string `json:"defaultPath"`
+	DefaultPath string         `json:"defaultPath"`
+	Logo        resources.Logo `json:"logo"`
 }
 
 // Docs defines a provider for creating documentation containers
@@ -85,6 +86,8 @@ func (d *Docs) Refresh() error {
 
 	indices := []resources.IndexBook{}
 	docsConfig := DocsConfig{}
+
+	docsConfig.Logo = d.config.Logo
 
 	for index, book := range d.config.Content {
 		br, err := d.config.ParentConfig.FindResource(book)
@@ -183,6 +186,8 @@ func (d *Docs) createDocsContainer() error {
 	indices := []resources.IndexBook{}
 	docsConfig := DocsConfig{}
 
+	docsConfig.Logo = d.config.Logo
+
 	for index, book := range d.config.Content {
 		br, err := d.config.ParentConfig.FindResource(book)
 		if err != nil {
@@ -221,6 +226,15 @@ func (d *Docs) createDocsContainer() error {
 		resources.Volume{
 			Source:      docsConfigPath,
 			Destination: docsConfigDestination,
+		},
+	)
+
+	assetsDestination := "/jumppad/public/assets"
+	cc.Volumes = append(
+		cc.Volumes,
+		resources.Volume{
+			Source:      d.config.Assets,
+			Destination: assetsDestination,
 		},
 	)
 
